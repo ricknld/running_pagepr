@@ -91,12 +91,12 @@ jobs:
           restore-keys: |
             ${{ env.DATA_CACHE_PREFIX }}-${{ github.sha }}-
             ${{ env.DATA_CACHE_PREFIX }}-
-
+            
       - name: Run sync JoyRun script
         if: env.RUN_TYPE == 'joyrun'
         run: |
-          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_PHONE }} ${{ secrets.JOYRUN_CODE }}            
-
+          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_UID }} ${{ secrets.JOYRUN_SID }} --from-uid-sid
+          
       - name: Run sync Nike script
         if: env.RUN_TYPE == 'nike'
         run: |
