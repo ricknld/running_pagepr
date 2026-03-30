@@ -13,9 +13,11 @@ const YearsStat = ({
   const { years } = useActivities();
 
   // Memoize the years array calculation
-  const yearsArrayUpdate = useMemo(() => {
-    // make sure the year click on front
-    let updatedYears = years.slice();
+const yearsArrayUpdate = useMemo(() => {
+    // Only allow years 2025 and 2026 to show up in the menu
+    const filteredYears = years.filter((y) => parseInt(y) >= 2025);
+    
+    let updatedYears = filteredYears.slice();
     updatedYears.push('Total');
     updatedYears = updatedYears.filter((x) => x !== year);
     updatedYears.unshift(year);
