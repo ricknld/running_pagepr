@@ -25,8 +25,10 @@ const yearsArrayUpdate = useMemo(() => {
   }, [years, year]);
 
   const infoMessage = useMemo(() => {
-    return INFO_MESSAGE(years.length, year);
-  }, [years.length, year]);
+    // Tell the message function we only have 2 years of data now (2025-2026)
+    const activeYearsCount = years.filter((y) => parseInt(y) >= 2025).length;
+    return INFO_MESSAGE(activeYearsCount, year);
+  }, [years, year]);
 
   // for short solution need to refactor
   return (
