@@ -196,3 +196,14 @@ hr {
     overflow-x: hidden;
   }
 }
+
+/* This hides the "Journey" cards for any year before 2025 */
+/* It looks for the text inside the Stat component and hides the parent div */
+div.cursor-pointer:has(span:contains("2019")),
+div.cursor-pointer:has(span:contains("2020")),
+div.cursor-pointer:has(span:contains("2021")),
+div.cursor-pointer:has(span:contains("2022")),
+div.cursor-pointer:has(span:contains("2023")),
+div.cursor-pointer:has(span:contains("2024")) {
+  display: none !important;
+}
