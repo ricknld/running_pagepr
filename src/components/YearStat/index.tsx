@@ -19,7 +19,9 @@ const YearStat = ({
   // for hover
   const [hovered, eventHandlers] = useHover();
   // lazy Component
-  const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
+  const YearSVG = lazy(() =>
+    loadSvgComponent(yearStats, `./year_${year}.svg`)
+  );
   const GithubYearSVG = lazy(() =>
     loadSvgComponent(githubYearStats, `./github_${year}.svg`)
   );
@@ -60,7 +62,10 @@ const YearStat = ({
     if (run.start_date_local) {
       const d = new Date(run.start_date_local);
       const start = new Date(d.getFullYear(), 0, 1);
-      const week = Math.ceil((((d.getTime() - start.getTime()) / 86400000) + start.getDay() + 1) / 7);
+      const week = Math.ceil(
+        (((d.getTime() - start.getTime()) / 86400000) + start.getDay() + 1) /
+          7
+      );
       activeWeeksSet.add(`${d.getFullYear()}-${week}`);
     }
   });
@@ -68,12 +73,16 @@ const YearStat = ({
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
   const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
   const hasHeartRate = !(heartRate === 0);
-  const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
-    0
-  );
+  const avgHeartRate = (
+    heartRate /
+    (runs.length - heartRateNullCount)
+  ).toFixed(0);
 
   const GOAL_KM = 1200;
-  const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
+  const progressPercent = Math.min(
+    Math.round((sumDistance / GOAL_KM) * 100),
+    100
+  );
 
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
@@ -100,7 +109,7 @@ const YearStat = ({
         </div>
       )}
 
-      {year !== 'Total' && hovered && (
+      {year !== "Total" && hovered && (
         <Suspense fallback="loading...">
           <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
           <GithubYearSVG className="github-year-svg my-4 h-auto w-full border-0 p-0" />
