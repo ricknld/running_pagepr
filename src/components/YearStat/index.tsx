@@ -5,7 +5,7 @@ import { formatPace } from '@/utils/utils';
 import useHover from '@/hooks/useHover';
 import { yearStats, githubYearStats } from '@assets/index';
 import { loadSvgComponent } from '@/utils/svgUtils';
-import { SHOW_ELEVATION_GAIN } from '@/utils/const';
+import { SHOW_ELEVATION_GAIN } from '@/utils/utils';
 import { DIST_UNIT, M_TO_DIST, M_TO_ELEV } from '@/utils/utils';
 
 const YearStat = ({
@@ -52,38 +52,38 @@ const YearStat = ({
   sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
   const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
-  
+
   // Progress Bar Variables
   const GOAL_KM = 1000;
   const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
 
   // prettier-ignore
   return (
-    <div className='cursor-pointer' onClick={() => onClick(year)}>
+    <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
-        <Stat value={year} description=' Journey' />
-        <Stat value={runs.length} description=' Runs' />
+        <Stat value={year} description=" Journey" />
+        <Stat value={runs.length} description=" Runs" />
         <Stat value={sumDistance} description={` ${DIST_UNIT}`} />
         {SHOW_ELEVATION_GAIN && (
-          <Stat value={sumElevationGainStr} description=' Elevation Gain' />
+          <Stat value={sumElevationGainStr} description=" Elevation Gain" />
         )}
-        <Stat value={avgPace} description=' Avg Pace' />
-        <Stat value={`${activeWeeksSet.size} Wks`} description=' Consistency' />
+        <Stat value={avgPace} description=" Avg Pace" />
+        <Stat value={`${activeWeeksSet.size} Wks`} description=" Consistency" />
       </section>
 
       {(year === '2026' || year === 'Total') && (
-        <div className='mt-2 mb-4 h-1.5 w-full rounded-full bg-gray-200 opacity-80 dark:bg-gray-700'>
+        <div className="mt-2 mb-4 h-1.5 w-full rounded-full bg-gray-200 opacity-80 dark:bg-gray-700">
           <div
-            className='h-1.5 rounded-full bg-blue-600'
+            className="h-1.5 rounded-full bg-blue-600"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       )}
 
       {year !== 'Total' && hovered && (
-        <Suspense fallback='loading...'>
-          <YearSVG className='year-svg my-4 h-4/6 w-4/6 border-0 p-0' />
-          <GithubYearSVG className='github-year-svg my-4 h-auto w-full border-0 p-0' />
+        <Suspense fallback="loading...">
+          <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
+          <GithubYearSVG className="github-year-svg my-4 h-auto w-full border-0 p-0" />
         </Suspense>
       )}
       <hr />
