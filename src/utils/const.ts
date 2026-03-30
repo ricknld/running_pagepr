@@ -3,7 +3,7 @@ const MAPBOX_TOKEN =
   // For security reasons, please avoid using the default public token provided by Mapbox as much as possible.
   // Instead, manually add a new token and apply URL restrictions.
   // (please refer to https://github.com/yihong0618/running_page/issues/643#issuecomment-2042668580)
-  'pk.eyJ1IjoieWlob25nMDYxOCIsImEiOiJjbWYxdXR4YncwMTJtMm5zOTE4eTZpMGdtIn0.OnsXdwkZFztR8a5Ph_T-xg';
+  'xg';
 const MUNICIPALITY_CITIES_ARR = [
   '北京市',
   '上海市',
@@ -31,7 +31,7 @@ const USE_GOOGLE_ANALYTICS = false;
 const GOOGLE_ANALYTICS_TRACKING_ID = '';
 
 // styling: set to `true` if you want dash-line route
-const USE_DASH_LINE = true;
+const USE_DASH_LINE = false;
 // styling: route line opacity: [0, 1]
 const LINE_OPACITY = 0.4;
 // styling: map height - responsive design
@@ -44,14 +44,14 @@ const ROAD_LABEL_DISPLAY = true;
 const PRIVACY_MODE = false;
 // updated on 2024/11/17: lights are turned off by default
 //set to `false` if you want to make light off as default, only effect when `PRIVACY_MODE` = false
-const LIGHTS_ON = false;
+const LIGHTS_ON = true;
 //set to `true` if you want to show the 'Elevation Gain' column
 const SHOW_ELEVATION_GAIN = false;
 // richer title for the activity types (like garmin style)
 const RICH_TITLE = false;
 
 // IF you are outside China please make sure IS_CHINESE = false
-const IS_CHINESE = true;
+const IS_CHINESE = false;
 const USE_ANIMATION_FOR_GRID = false;
 const CHINESE_INFO_MESSAGE = (yearLength: number, year: string): string => {
   const yearStr = year === 'Total' ? '所有' : ` ${year} `;
@@ -233,7 +233,7 @@ export const SWIMMING_COLOR = 'rgb(255,51,51)';
 export const MAP_TILE_VENDOR = 'mapcn';
 
 // map tiles style name, see MAP_TILE_STYLES for more details
-export const MAP_TILE_STYLE_LIGHT = 'osm-bright';
+export const MAP_TILE_STYLE_LIGHT = 'osm-liberty';
 export const MAP_TILE_STYLE_DARK = 'dark-matter';
 
 // access token. you can apply a new one, it's free.
