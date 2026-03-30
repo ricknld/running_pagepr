@@ -20,7 +20,7 @@ const YearStat = ({
 
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
   const GithubYearSVG = lazy(() =>
-    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+    loadSvgComponent(githubYearStats, `./github_${year}.svg`),
   );
 
   if (years.includes(year)) {
@@ -45,7 +45,7 @@ const YearStat = ({
       const date = new Date(run.start_date_local);
       const startOfYear = new Date(date.getFullYear(), 0, 1);
       const pastDays = Math.floor(
-        (date.getTime() - startOfYear.getTime()) / 86400000
+        (date.getTime() - startOfYear.getTime()) / 86400000,
       );
       const weekNum = Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
       activeWeeksSet.add(`${date.getFullYear()}-${weekNum}`);
@@ -60,7 +60,7 @@ const YearStat = ({
   const GOAL_KM = 1000;
   const progressPercent = Math.min(
     Math.round((formattedDist / GOAL_KM) * 100),
-    100
+    100,
   );
 
   return (
@@ -81,7 +81,7 @@ const YearStat = ({
           <div
             className="h-1.5 rounded-full bg-blue-600"
             style={{ width: `${progressPercent}%` }}
-          ></div>
+          />
         </div>
       )}
 
