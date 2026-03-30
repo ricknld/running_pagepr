@@ -16,9 +16,11 @@ const YearStat = ({
   onClick: (_year: string) => void;
 }) => {
   let { activities: runs, years } = useActivities();
-  // for hover
   const [hovered, eventHandlers] = useHover();
-  // lazy Component
+  
+  // Define what years we want to hide visually
+  const isOldYear = year !== 'Total' && parseInt(year) < 2025;
+
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
   const GithubYearSVG = lazy(() =>
     loadSvgComponent(githubYearStats, `./github_${year}.svg`)
@@ -27,43 +29,35 @@ const YearStat = ({
   if (years.includes(year)) {
     runs = runs.filter((run) => run.start_date_local.slice(0, 4) === year);
   }
+  
   let sumDistance = 0;
   let streak = 0;
   let sumElevationGain = 0;
-  let _pace = 0;
-  let _paceNullCount = 0;
-  let heartRate = 0;
-  let heartRateNullCount = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
+
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
     if (run.average_speed) {
-      _pace += run.average_speed;
       totalMetersAvail += run.distance || 0;
       totalSecondsAvail += (run.distance || 0) / run.average_speed;
-    } else {
-      _paceNullCount++;
-    }
-    if (run.average_heartrate) {
-      heartRate += run.average_heartrate;
-    } else {
-      heartRateNullCount++;
     }
     if (run.streak) {
       streak = Math.max(streak, run.streak);
     }
   });
+
   sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
-  const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
-  const hasHeartRate = !(heartRate === 0);
-  const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
-    0
-  );
+  const avgPace = totalSecondsAvail > 0 ? formatPace(totalMetersAvail / totalSecondsAvail) : '0';
+
   return (
-    <div className="cursor-pointer" onClick={() => onClick(year)}>
+    <div 
+      className="cursor-pointer" 
+      onClick={() => onClick(year)}
+      style={{ display: isOldYear ? 'none' : 'block' }} // Hides old years without crashing
+    >
       <section {...eventHandlers}>
         <Stat value={year} description=" Journey" />
         <Stat value={runs.length} description=" Runs" />
@@ -73,9 +67,7 @@ const YearStat = ({
         )}
         <Stat value={avgPace} description=" Avg Pace" />
         <Stat value={`${streak} day`} description=" Streak" />
-        {hasHeartRate && (
-          <Stat value={avgHeartRate} description=" Avg Heart Rate" />
-        )}
+        {/* Heart Rate Stat Removed as requested */}
       </section>
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
