@@ -1,12 +1,11 @@
 import { lazy, Suspense } from "react";
 import Stat from "@/components/Stat";
 import useActivities from "@/hooks/useActivities";
-import { formatPace } from "@/utils/utils";
 import useHover from "@/hooks/useHover";
 import { yearStats, githubYearStats } from "@assets/index";
-import { loadSvgComponent } from "@/utils/svgUtils";
 import { SHOW_ELEVATION_GAIN } from "@/utils/const";
-import { DIST_UNIT, M_TO_DIST, M_TO_ELEV } from "@/utils/utils";
+import { DIST_UNIT, M_TO_DIST, M_TO_ELEV, formatPace } from "@/utils/utils";
+import { loadSvgComponent } from "@/utils/svgUtils";
 
 const YearStat = ({
   year,
@@ -18,7 +17,9 @@ const YearStat = ({
   let { activities: runs, years } = useActivities();
   const [hovered, eventHandlers] = useHover();
 
-  const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
+  const YearSVG = lazy(() =>
+    loadSvgComponent(yearStats, `./year_${year}.svg`),
+  );
   const GithubYearSVG = lazy(() =>
     loadSvgComponent(githubYearStats, `./github_${year}.svg`),
   );
@@ -31,11 +32,12 @@ const YearStat = ({
   let sumElevationGain = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
-  const activeWeeksSet = new Set();
+  const activeWeeksSet = new Set<string>();
 
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
+
     if (run.average_speed) {
       totalMetersAvail += run.distance || 0;
       totalSecondsAvail += (run.distance || 0) / run.average_speed;
@@ -48,6 +50,7 @@ const YearStat = ({
         (date.getTime() - startOfYear.getTime()) / 86400000,
       );
       const weekNum = Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
+
       activeWeeksSet.add(`${date.getFullYear()}-${weekNum}`);
     }
   });
@@ -91,6 +94,7 @@ const YearStat = ({
           <GithubYearSVG className="github-year-svg my-4 h-auto w-full border-0 p-0" />
         </Suspense>
       )}
+
       <hr />
     </div>
   );
