@@ -15,10 +15,10 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'Running Page',
+  siteTitle: 'Rick's Running',
   siteUrl: '',
   logo: '/images/9B36C672-6724-46B1-A310-BC2136D66250.png',
-  description: 'Personal site and blog',
+  description: '',
   navLinks: [
     {
       name: 'Summary',
@@ -26,7 +26,7 @@ const data: ISiteMetadataResult = {
     },
     {
       name: 'Blog',
-      url: 'g',
+      url: '',
     },
     {
       name: 'About',
