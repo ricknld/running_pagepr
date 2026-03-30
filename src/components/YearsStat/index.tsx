@@ -12,15 +12,23 @@ const YearsStat = ({
 }) => {
   const { years } = useActivities();
 
-  // Memoize the years array calculation
-const yearsArrayUpdate = useMemo(() => {
-    // Only allow years 2025 and 2026 to show up in the menu
+// Memoize the years array calculation
+  const yearsArrayUpdate = useMemo(() => {
+    // 1. Only allow years 2025 and 2026
     const filteredYears = years.filter((y) => parseInt(y) >= 2025);
     
     let updatedYears = filteredYears.slice();
     updatedYears.push('Total');
-    updatedYears = updatedYears.filter((x) => x !== year);
-    updatedYears.unshift(year);
+
+    // 2. SAFETY CHECK: If the current 'year' is old (e.g. 2023), default to 'Total'
+    // This prevents the "Rules of Hooks" error and undefined crashes
+    const isValidYear = year === 'Total' || parseInt(year) >= 2025;
+    const activeYear = isValidYear ? year : 'Total';
+
+    // 3. Re-order the list so the active year is at the top
+    updatedYears = updatedYears.filter((x) => x !== activeYear);
+    updatedYears.unshift(activeYear);
+    
     return updatedYears;
   }, [years, year]);
 
