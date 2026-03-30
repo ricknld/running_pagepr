@@ -15,7 +15,7 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'Rick's Running',
+  siteTitle: "Rick's Runs",
   siteUrl: '',
   logo: '/images/9B36C672-6724-46B1-A310-BC2136D66250.png',
   description: '',
