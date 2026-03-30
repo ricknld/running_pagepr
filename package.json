@@ -41,7 +41,7 @@
     "serve": "vite serve",
     "lint": "eslint src --ext .ts,.tsx --fix",
     "scripts": {
-    "check": "prettier --write 'src/**/*.{css,module.css,json,ts,tsx}' '*.{yaml,json,ts}'; prettier --check 'src/**/*.{css,module.css,json,ts,tsx}' '*.{yaml,json,ts}'"}
+    "check": "prettier --check \"src/main.tsx\" \"src/**/*.{css,module.css,json,ts,tsx}\" \"*.{yaml,json,ts}\"",p
     "format": "prettier --write \"src/main.tsx\" \"src/**/*.{css,module.css,json,ts,tsx}\" \"*.{yaml,json,ts}\"",
     "ci": "pnpm run format && pnpm run lint && pnpm run build"
   },
