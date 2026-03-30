@@ -15,38 +15,39 @@ const YearStat = ({
   year: string;
   onClick: (_year: string) => void;
 }) => {
-  const { activities: allRuns, years } = useActivities();
+  let { activities: runs, years } = useActivities();
+  // for hover
   const [hovered, eventHandlers] = useHover();
-  
-  // 1. Filter runs first
-  let runs = allRuns;
-  if (years.includes(year)) {
-    runs = allRuns.filter((run) => run.start_date_local.slice(0, 4) === year);
-  }
-
-  // 2. Lazy Components
+  // lazy Component
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
   const GithubYearSVG = lazy(() =>
     loadSvgComponent(githubYearStats, `./github_${year}.svg`)
   );
 
-  // 3. Calculation Loop
+  if (years.includes(year)) {
+    runs = runs.filter((run) => run.start_date_local.slice(0, 4) === year);
+  }
+  
   let sumDistance = 0;
   let sumElevationGain = 0;
+  let _pace = 0;
+  let _paceNullCount = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
-  const activeWeeksSet = new Set();
+  let activeWeeksSet = new Set(); // Setup for Consistency Wks
 
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
-    
     if (run.average_speed) {
+      _pace += run.average_speed;
       totalMetersAvail += run.distance || 0;
       totalSecondsAvail += (run.distance || 0) / run.average_speed;
+    } else {
+      _paceNullCount++;
     }
 
-    // Weekly consistency logic
+    // Safely calculate active weeks
     if (run.start_date_local) {
       const date = new Date(run.start_date_local);
       const startOfYear = new Date(date.getFullYear(), 0, 1);
@@ -56,35 +57,37 @@ const YearStat = ({
     }
   });
 
-  // 4. Format Values
-  const formattedDist = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
-  const avgPace = totalSecondsAvail > 0 ? formatPace(totalMetersAvail / totalSecondsAvail) : '0:00';
+  sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
+  const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
+  const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
   const activeWeeks = activeWeeksSet.size;
+
+  // Set the visual progress goal
   const GOAL_KM = 1000;
-  const progressPercent = Math.min(Math.round((formattedDist / GOAL_KM) * 100), 100);
+  const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
 
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
         <Stat value={year} description=" Journey" />
         <Stat value={runs.length} description=" Runs" />
-        
-        <div className="flex flex-col">
-          <Stat value={formattedDist} description={` ${DIST_UNIT}`} />
-          {(year === '2026' || year === 'Total') && (
-            <div className="w-full bg-gray-200 rounded-full h-1 mt-1 dark:bg-gray-800" style={{ minWidth: '100px' }}>
-              <div 
-                className="bg-blue-500 h-1 rounded-full transition-all duration-500" 
-                style={{ width: `${progressPercent}%` }}
-              ></div>
-              <p className="text-[10px] text-gray-500 mt-0.5">{progressPercent}% of {GOAL_KM}km Goal</p>
-            </div>
-          )}
-        </div>
-
+        <Stat value={sumDistance} description={` ${DIST_UNIT}`} />
+        {SHOW_ELEVATION_GAIN && (
+          <Stat value={sumElevationGainStr} description=" Elevation Gain" />
+        )}
         <Stat value={avgPace} description=" Avg Pace" />
-        <Stat value={`${activeWeeks} wks`} description=" Consistency" />
+        <Stat value={`${activeWeeks} Wks`} description=" Consistency" />
       </section>
+
+      {/* Progress Bar placed OUTSIDE the section grid to prevent layout crashes */}
+      {(year === '2026' || year === 'Total') && (
+        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 mb-4 dark:bg-gray-700 opacity-80">
+          <div 
+            className="bg-blue-600 h-1.5 rounded-full" 
+            style={{ width: `${progressPercent}%` }}
+          ></div>
+        </div>
+      )}
 
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
