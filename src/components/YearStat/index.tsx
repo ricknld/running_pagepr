@@ -81,18 +81,29 @@ const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100)
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
-        <Stat value={year} description=" Journey" />
-        <Stat value={runs.length} description=" Runs" />
-        <Stat value={sumDistance} description={` ${DIST_UNIT}`} />
-        {SHOW_ELEVATION_GAIN && (
-          <Stat value={sumElevationGainStr} description=" Elevation Gain" />
-        )}
-        <Stat value={avgPace} description=" Avg Pace" />
-        <Stat value={`${streak} day`} description=" Streak" />
-        {hasHeartRate && (
-          <Stat value={avgHeartRate} description=" Avg Heart Rate" />
-        )}
-      </section>
+  <Stat value={year} description=" Journey" />
+  <Stat value={runs.length} description=" Runs" />
+  
+  {/* Distance + Progress Bar */}
+  <div className="flex flex-col">
+    <Stat value={sumDistance} description={` ${DIST_UNIT}`} />
+    {year === '2026' && (
+      <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1 dark:bg-gray-700">
+        <div 
+          className="bg-blue-600 h-1.5 rounded-full" 
+          style={{ width: `${progressPercent}%` }}
+        ></div>
+        <span className="text-[10px] text-gray-500">{progressPercent}% of {GOAL_KM}km Goal</span>
+      </div>
+    )}
+  </div>
+
+  <Stat value={avgPace} description=" Avg Pace" />
+  
+  {/* Replaced Streak with Active Weeks */}
+  <Stat value={`${activeWeeks} wks`} description=" Consistency" />
+</section>
+
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
           <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
