@@ -1,5 +1,5 @@
 interface ISiteMetadataResult {
-  siteTitle: string;
+  siteTitle: "Rick's Runs";
   siteUrl: string;
   description: string;
   logo: string;
@@ -15,9 +15,9 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: "Rick's Runs",
+  siteTitle: 'Running Page',
   siteUrl: '',
-  logo: '/public/images/9B36C672-6724-46B1-A310-BC2136D66250.png',
+  logo: '/images/IMG_2262.jpeg',
   description: 'Personal site and blog',
   navLinks: [
     {
@@ -26,7 +26,7 @@ const data: ISiteMetadataResult = {
     },
     {
       name: 'Blog',
-      url: '',
+      url: 'g',
     },
     {
       name: 'About',
