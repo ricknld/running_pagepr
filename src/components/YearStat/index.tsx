@@ -96,4 +96,4 @@ const YearStat = ({
   );
 };
 
-export default YearStat;
+export default YearStat;   
