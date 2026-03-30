@@ -45,11 +45,6 @@ const RunTable = ({
       sortFuncInfo === 'Pace'
         ? a.average_speed - b.average_speed
         : b.average_speed - a.average_speed;
-    const sortBPMFunc: SortFunc = (a, b) => {
-      return sortFuncInfo === 'BPM'
-        ? (a.average_heartrate ?? 0) - (b.average_heartrate ?? 0)
-        : (b.average_heartrate ?? 0) - (a.average_heartrate ?? 0);
-    };
     const sortRunTimeFunc: SortFunc = (a, b) => {
       const aTotalSeconds = convertMovingTime2Sec(a.moving_time);
       const bTotalSeconds = convertMovingTime2Sec(b.moving_time);
@@ -64,7 +59,6 @@ const RunTable = ({
       [DIST_UNIT, sortKMFunc],
       ['Elev', sortElevationGainFunc],
       ['Pace', sortPaceFunc],
-      ['BPM', sortBPMFunc],
       ['Time', sortRunTimeFunc],
       ['Date', sortDateFuncClick],
     ]);
