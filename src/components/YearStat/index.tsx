@@ -1,16 +1,16 @@
-import { lazy, Suspense } from "react";
-import Stat from "@/components/Stat";
-import useActivities from "@/hooks/useActivities";
-import useHover from "@/hooks/useHover";
-import { yearStats, githubYearStats } from "@assets/index";
-import { SHOW_ELEVATION_GAIN } from "@/utils/const";
+import { lazy, Suspense } from 'react';
+import Stat from '@/components/Stat';
+import useActivities from '@/hooks/useActivities';
+import useHover from '@/hooks/useHover';
+import { yearStats, githubYearStats } from '@assets/index';
+import { SHOW_ELEVATION_GAIN } from '@/utils/const';
 import {
   DIST_UNIT,
   M_TO_DIST,
   M_TO_ELEV,
   formatPace,
-} from "@/utils/utils";
-import { loadSvgComponent } from "@/utils/svgUtils";
+} from '@/utils/utils';
+import { loadSvgComponent } from '@/utils/svgUtils';
 
 const YearStat = ({
   year,
@@ -23,15 +23,15 @@ const YearStat = ({
   const [hovered, eventHandlers] = useHover();
 
   const YearSVG = lazy(() =>
-    loadSvgComponent(yearStats, `./year_${year}.svg`)
+    loadSvgComponent(yearStats, `./year_${year}.svg`),
   );
   const GithubYearSVG = lazy(() =>
-    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+    loadSvgComponent(githubYearStats, `./github_${year}.svg`),
   );
 
   if (years.includes(year)) {
     runs = runs.filter(
-      (run) => run.start_date_local.slice(0, 4) === year
+      (run) => run.start_date_local.slice(0, 4) === year,
     );
   }
 
@@ -55,11 +55,11 @@ const YearStat = ({
       const startOfYear = new Date(date.getFullYear(), 0, 1);
 
       const pastDays = Math.floor(
-        (date.getTime() - startOfYear.getTime()) / 86400000
+        (date.getTime() - startOfYear.getTime()) / 86400000,
       );
 
       const weekNum = Math.ceil(
-        (pastDays + startOfYear.getDay() + 1) / 7
+        (pastDays + startOfYear.getDay() + 1) / 7,
       );
 
       activeWeeksSet.add(`${date.getFullYear()}-${weekNum}`);
@@ -67,7 +67,7 @@ const YearStat = ({
   });
 
   const formattedDist = parseFloat(
-    (sumDistance / M_TO_DIST).toFixed(1)
+    (sumDistance / M_TO_DIST).toFixed(1),
   );
 
   const sumElevationGainStr = (
@@ -75,7 +75,7 @@ const YearStat = ({
   ).toFixed(0);
 
   const avgPace = formatPace(
-    totalMetersAvail / totalSecondsAvail
+    totalMetersAvail / totalSecondsAvail,
   );
 
   const activeWeeks = activeWeeksSet.size;
@@ -84,43 +84,43 @@ const YearStat = ({
 
   const progressPercent = Math.min(
     Math.round((formattedDist / GOAL_KM) * 100),
-    100
+    100,
   );
 
   return (
-    <div className="cursor-pointer" onClick={() => onClick(year)}>
+    <div className='cursor-pointer' onClick={() => onClick(year)}>
       <section {...eventHandlers}>
-        <Stat value={year} description=" Journey" />
-        <Stat value={runs.length} description=" Runs" />
+        <Stat value={year} description=' Journey' />
+        <Stat value={runs.length} description=' Runs' />
         <Stat value={formattedDist} description={` ${DIST_UNIT}`} />
 
         {SHOW_ELEVATION_GAIN && (
           <Stat
             value={sumElevationGainStr}
-            description=" Elevation Gain"
+            description=' Elevation Gain'
           />
         )}
 
-        <Stat value={avgPace} description=" Avg Pace" />
+        <Stat value={avgPace} description=' Avg Pace' />
         <Stat
           value={`${activeWeeks} Wks`}
-          description=" Consistency"
+          description=' Consistency'
         />
       </section>
 
-      {(year === "2026" || year === "Total") && (
-        <div className="mb-4 mt-2 h-1.5 w-full rounded-full bg-gray-200 opacity-80 dark:bg-gray-700">
+      {(year === '2026' || year === 'Total') && (
+        <div className='mb-4 mt-2 h-1.5 w-full rounded-full bg-gray-200 opacity-80 dark:bg-gray-700'>
           <div
-            className="h-1.5 rounded-full bg-blue-600"
+            className='h-1.5 rounded-full bg-blue-600'
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       )}
 
-      {year !== "Total" && hovered && (
-        <Suspense fallback="loading...">
-          <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
-          <GithubYearSVG className="github-year-svg my-4 h-auto w-full border-0 p-0" />
+      {year !== 'Total' && hovered && (
+        <Suspense fallback='loading...'>
+          <YearSVG className='year-svg my-4 h-4/6 w-4/6 border-0 p-0' />
+          <GithubYearSVG className='github-year-svg my-4 h-auto w-full border-0 p-0' />
         </Suspense>
       )}
 
