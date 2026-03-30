@@ -15,94 +15,76 @@ const YearStat = ({
   year: string;
   onClick: (_year: string) => void;
 }) => {
-  let { activities: runs, years } = useActivities();
-  // for hover
+  const { activities: allRuns, years } = useActivities();
   const [hovered, eventHandlers] = useHover();
-  // lazy Component
+  
+  // 1. Filter runs first
+  let runs = allRuns;
+  if (years.includes(year)) {
+    runs = allRuns.filter((run) => run.start_date_local.slice(0, 4) === year);
+  }
+
+  // 2. Lazy Components
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
   const GithubYearSVG = lazy(() =>
     loadSvgComponent(githubYearStats, `./github_${year}.svg`)
   );
 
-  if (years.includes(year)) {
-    runs = runs.filter((run) => run.start_date_local.slice(0, 4) === year);
-  }
+  // 3. Calculation Loop
   let sumDistance = 0;
-  let streak = 0;
   let sumElevationGain = 0;
-  let _pace = 0;
-  let _paceNullCount = 0;
-  let heartRate = 0;
-  let heartRateNullCount = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
+  const activeWeeksSet = new Set();
+
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
+    
     if (run.average_speed) {
-      _pace += run.average_speed;
       totalMetersAvail += run.distance || 0;
       totalSecondsAvail += (run.distance || 0) / run.average_speed;
-    } else {
-      _paceNullCount++;
     }
-    if (run.average_heartrate) {
-      heartRate += run.average_heartrate;
-    } else {
-      heartRateNullCount++;
-    }
-    if (run.streak) {
-      streak = Math.max(streak, run.streak);
+
+    // Weekly consistency logic
+    if (run.start_date_local) {
+      const date = new Date(run.start_date_local);
+      const startOfYear = new Date(date.getFullYear(), 0, 1);
+      const pastDays = Math.floor((date.getTime() - startOfYear.getTime()) / 86400000);
+      const weekNum = Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
+      activeWeeksSet.add(`${date.getFullYear()}-${weekNum}`);
     }
   });
-  sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
-  const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
-  const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
-  const hasHeartRate = !(heartRate === 0);
-  const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
-    0
-  );
-  // 1. Calculate Active Weeks
-const activeWeeksSet = new Set();
-runs.forEach((run) => {
-  const date = new Date(run.start_date_local);
-  // Get a unique string for the week (Year-WeekNumber)
-  const oneJan = new Date(date.getFullYear(), 0, 1);
-  const numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
-  const weekNumber = Math.ceil((date.getDay() + 1 + numberOfDays) / 7);
-  activeWeeksSet.add(`${date.getFullYear()}-${weekNumber}`);
-});
-const activeWeeks = activeWeeksSet.size;
 
-// 2. Set a 2026 Distance Goal (e.g., 1000km for the year)
-const GOAL_KM = 1000; 
-const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
+  // 4. Format Values
+  const formattedDist = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
+  const avgPace = totalSecondsAvail > 0 ? formatPace(totalMetersAvail / totalSecondsAvail) : '0:00';
+  const activeWeeks = activeWeeksSet.size;
+  const GOAL_KM = 1000;
+  const progressPercent = Math.min(Math.round((formattedDist / GOAL_KM) * 100), 100);
 
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
-  <Stat value={year} description=" Journey" />
-  <Stat value={runs.length} description=" Runs" />
-  
-  {/* Distance + Progress Bar */}
-  <div className="flex flex-col">
-    <Stat value={sumDistance} description={` ${DIST_UNIT}`} />
-    {year === '2026' && (
-      <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1 dark:bg-gray-700">
-        <div 
-          className="bg-blue-600 h-1.5 rounded-full" 
-          style={{ width: `${progressPercent}%` }}
-        ></div>
-        <span className="text-[10px] text-gray-500">{progressPercent}% of {GOAL_KM}km Goal</span>
-      </div>
-    )}
-  </div>
+        <Stat value={year} description=" Journey" />
+        <Stat value={runs.length} description=" Runs" />
+        
+        <div className="flex flex-col">
+          <Stat value={formattedDist} description={` ${DIST_UNIT}`} />
+          {(year === '2026' || year === 'Total') && (
+            <div className="w-full bg-gray-200 rounded-full h-1 mt-1 dark:bg-gray-800" style={{ minWidth: '100px' }}>
+              <div 
+                className="bg-blue-500 h-1 rounded-full transition-all duration-500" 
+                style={{ width: `${progressPercent}%` }}
+              ></div>
+              <p className="text-[10px] text-gray-500 mt-0.5">{progressPercent}% of {GOAL_KM}km Goal</p>
+            </div>
+          )}
+        </div>
 
-  <Stat value={avgPace} description=" Avg Pace" />
-  
-  {/* Replaced Streak with Active Weeks */}
-  <Stat value={`${activeWeeks} wks`} description=" Consistency" />
-</section>
+        <Stat value={avgPace} description=" Avg Pace" />
+        <Stat value={`${activeWeeks} wks`} description=" Consistency" />
+      </section>
 
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
