@@ -62,6 +62,22 @@ const YearStat = ({
   const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
     0
   );
+  // 1. Calculate Active Weeks
+const activeWeeksSet = new Set();
+runs.forEach((run) => {
+  const date = new Date(run.start_date_local);
+  // Get a unique string for the week (Year-WeekNumber)
+  const oneJan = new Date(date.getFullYear(), 0, 1);
+  const numberOfDays = Math.floor((date.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+  const weekNumber = Math.ceil((date.getDay() + 1 + numberOfDays) / 7);
+  activeWeeksSet.add(`${date.getFullYear()}-${weekNumber}`);
+});
+const activeWeeks = activeWeeksSet.size;
+
+// 2. Set a 2026 Distance Goal (e.g., 1000km for the year)
+const GOAL_KM = 1000; 
+const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
+
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
