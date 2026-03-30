@@ -43,11 +43,9 @@ const YearStat = ({
 
     if (run.start_date_local) {
       const date = new Date(run.start_date_local);
-      const startOfYear = new Date(date.getFullYear(), 0, 1);
-      const pastDays = Math.floor(
-        (date.getTime() - startOfYear.getTime()) / 86400000
-      );
-      const weekNum = Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
+      const oneJan = new Date(date.getFullYear(), 0, 1);
+      const days = Math.floor((date.getTime() - oneJan.getTime()) / 86400000);
+      const weekNum = Math.ceil((days + oneJan.getDay() + 1) / 7);
       activeWeeksSet.add(`${date.getFullYear()}-${weekNum}`);
     }
   });
@@ -56,13 +54,10 @@ const YearStat = ({
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
   const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
   const activeWeeks = activeWeeksSet.size;
-
   const GOAL_KM = 1000;
-  const progressPercent = Math.min(
-    Math.round((formattedDist / GOAL_KM) * 100),
-    100
-  );
+  const progressPercent = Math.min(Math.round((formattedDist / GOAL_KM) * 100), 100);
 
+  // prettier-ignore
   return (
     <div className='cursor-pointer' onClick={() => onClick(year)}>
       <section {...eventHandlers}>
@@ -96,4 +91,4 @@ const YearStat = ({
   );
 };
 
-export default YearStat;   
+export default YearStat;
