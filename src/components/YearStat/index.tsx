@@ -36,6 +36,8 @@ const YearStat = ({
   let heartRateNullCount = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
+  const activeWeeksSet = new Set(); // Added for consistency
+
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
@@ -54,6 +56,13 @@ const YearStat = ({
     if (run.streak) {
       streak = Math.max(streak, run.streak);
     }
+    // Added week calculation logic
+    if (run.start_date_local) {
+      const d = new Date(run.start_date_local);
+      const start = new Date(d.getFullYear(), 0, 1);
+      const week = Math.ceil((((d.getTime() - start.getTime()) / 86400000) + start.getDay() + 1) / 7);
+      activeWeeksSet.add(`${d.getFullYear()}-${week}`);
+    }
   });
   sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
@@ -62,6 +71,10 @@ const YearStat = ({
   const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
     0
   );
+
+  const GOAL_KM = 1200;
+  const progressPercent = Math.min(Math.round((sumDistance / GOAL_KM) * 100), 100);
+
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
@@ -72,11 +85,21 @@ const YearStat = ({
           <Stat value={sumElevationGainStr} description=" Elevation Gain" />
         )}
         <Stat value={avgPace} description=" Avg Pace" />
-        <Stat value={`${streak} day`} description=" Streak" />
+        <Stat value={`${activeWeeksSet.size} Wks`} description=" Consistency" />
         {hasHeartRate && (
           <Stat value={avgHeartRate} description=" Avg Heart Rate" />
         )}
       </section>
+
+      {(year === "2026" || year === "Total") && (
+        <div className="mt-2 mb-4 h-1.5 w-full rounded-full bg-gray-200 opacity-80 dark:bg-gray-700">
+          <div
+            className="h-1.5 rounded-full bg-blue-600"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      )}
+
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
           <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
