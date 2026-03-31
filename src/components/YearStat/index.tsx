@@ -59,8 +59,7 @@ const YearStat = ({
       const d = new Date(run.start_date_local);
       const start = new Date(d.getFullYear(), 0, 1);
       const week = Math.ceil(
-      ((d.getTime() - start.getTime()) / 86400000 + start.getDay() + 1) / 7,
-      );
+      ((d.getTime() - start.getTime()) / 86400000 + start.getDay() + 1) / 7,);
       activeWeeksSet.add(`${d.getFullYear()}-${week}`);
     }
   });
