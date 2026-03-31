@@ -37,7 +37,7 @@ const YearStat = ({
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
   const activeWeeksSet = new Set();
-  runs.forEach((run) => {
+runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
     if (run.average_speed) {
@@ -54,6 +54,12 @@ const YearStat = ({
     }
     if (run.streak) {
       streak = Math.max(streak, run.streak);
+    }
+    if (run.start_date_local) {
+      const d = new Date(run.start_date_local);
+      const start = new Date(d.getFullYear(), 0, 1);
+      const week = Math.ceil((((d.getTime() - start.getTime()) / 86400000) + start.getDay() + 1) / 7);
+      activeWeeksSet.add(`${d.getFullYear()}-${week}`);
     }
   });
   sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
