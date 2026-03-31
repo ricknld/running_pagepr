@@ -21,7 +21,7 @@ const YearStat = ({
   // lazy Component
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
   const GithubYearSVG = lazy(() =>
-      loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
   );
 
   if (years.includes(year)) {
