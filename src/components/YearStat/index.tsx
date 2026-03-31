@@ -55,7 +55,6 @@ const YearStat = ({
     if (run.streak) {
       streak = Math.max(streak, run.streak);
     }
-    }
     if (run.start_date_local) {
       const d = new Date(run.start_date_local);
       const start = new Date(d.getFullYear(), 0, 1);
