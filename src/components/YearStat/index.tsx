@@ -20,8 +20,8 @@ const YearStat = ({
   const [hovered, eventHandlers] = useHover();
   // lazy Component
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
-  const GithubYearSVG = lazy(() => 
-    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+  const GithubYearSVG = lazy(() =>
+      loadSvgComponent(githubYearStats, `./github_${year}.svg`)
   );
 
   if (years.includes(year)) {
@@ -36,6 +36,7 @@ const YearStat = ({
   let heartRateNullCount = 0;
   let totalMetersAvail = 0;
   let totalSecondsAvail = 0;
+  const activeWeeksSet = new Set();
   runs.forEach((run) => {
     sumDistance += run.distance || 0;
     sumElevationGain += run.elevation_gain || 0;
