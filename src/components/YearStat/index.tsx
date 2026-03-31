@@ -20,7 +20,9 @@ const YearStat = ({
   const [hovered, eventHandlers] = useHover();
   // lazy Component
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
-  const GithubYearSVG = lazy(() => loadSvgComponent(githubYearStats, `./github_${year}.svg`));
+  const GithubYearSVG = lazy(() => 
+    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+  );
 
   if (years.includes(year)) {
     runs = runs.filter((run) => run.start_date_local.slice(0, 4) === year);
