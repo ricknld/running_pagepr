@@ -38,37 +38,39 @@ const YearStat = ({
   let totalSecondsAvail = 0;
   const activeWeeksSet = new Set();
 runs.forEach((run) => {
-    sumDistance += run.distance || 0;
-    sumElevationGain += run.elevation_gain || 0;
-    if (run.average_speed) {
-      _pace += run.average_speed;
-      totalMetersAvail += run.distance || 0;
-      totalSecondsAvail += (run.distance || 0) / run.average_speed;
-    } else {
-      _paceNullCount++;
-    }
-    if (run.average_heartrate) {
-      heartRate += run.average_heartrate;
-    } else {
-      heartRateNullCount++;
-    }
-    if (run.streak) {
-      streak = Math.max(streak, run.streak);
-    }
-    if (run.start_date_local) {
-      const d = new Date(run.start_date_local);
-      const start = new Date(d.getFullYear(), 0, 1);
-      const week = Math.ceil((((d.getTime() - start.getTime()) / 86400000) + start.getDay() + 1) / 7);
-      activeWeeksSet.add(`${d.getFullYear()}-${week}`);
-    }
-  });
-  sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
-  const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
-  const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
-  const hasHeartRate = !(heartRate === 0);
-  const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
-    0
-  );
+  sumDistance += run.distance || 0;
+  sumElevationGain += run.elevation_gain || 0;
+  if (run.average_speed) {
+    _pace += run.average_speed;
+    totalMetersAvail += run.distance || 0;
+    totalSecondsAvail += (run.distance || 0) / run.average_speed;
+  } else {
+    _paceNullCount++;
+  }
+  if (run.average_heartrate) {
+    heartRate += run.average_heartrate;
+  } else {
+    heartRateNullCount++;
+  }
+  if (run.streak) {
+    streak = Math.max(streak, run.streak);
+  }
+  if (run.start_date_local) {
+    const d = new Date(run.start_date_local);
+    const start = new Date(d.getFullYear(), 0, 1);
+    const week = Math.ceil(
+      ((d.getTime() - start.getTime()) / 86400000 + start.getDay() + 1) / 7,
+    );
+    activeWeeksSet.add(`${d.getFullYear()}-${week}`);
+  }
+});
+sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
+const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
+const avgPace = formatPace(totalMetersAvail / totalSecondsAvail);
+const hasHeartRate = !(heartRate === 0);
+const avgHeartRate = (heartRate / (runs.length - heartRateNullCount)).toFixed(
+  0,
+);
   return (
     <div className="cursor-pointer" onClick={() => onClick(year)}>
       <section {...eventHandlers}>
