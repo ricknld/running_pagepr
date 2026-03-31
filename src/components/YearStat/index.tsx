@@ -76,7 +76,7 @@ const YearStat = ({
     Math.round((sumDistance / GOAL_KM) * 100),
     100
   );
-
+  // prettier-ignore
   return (
     <div className='cursor-pointer' onClick={() => onClick(year)}>
       <section {...eventHandlers}>
