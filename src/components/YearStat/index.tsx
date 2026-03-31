@@ -58,9 +58,15 @@ const YearStat = ({
     if (run.start_date_local) {
       const d = new Date(run.start_date_local);
       const start = new Date(d.getFullYear(), 0, 1);
-      const week = Math.ceil(((d.getTime() - start.getTime()) / 86400000 + start.getDay() + 1) / 7);
+      const week = Math.ceil(
+        ((d.getTime() - start.getTime()) / 86400000 +
+          start.getDay() +
+          1) /
+          7,
+      );
       activeWeeksSet.add(`${d.getFullYear()}-${week}`);
     }
+
   });
   sumDistance = parseFloat((sumDistance / M_TO_DIST).toFixed(1));
   const sumElevationGainStr = (sumElevationGain * M_TO_ELEV).toFixed(0);
