@@ -26,9 +26,9 @@ on:
 
 env:
   # please change to your own config.
-  RUN_TYPE: joyrun
-  ATHLETE: rick
-  TITLE: rick Running
+  RUN_TYPE: strava
+  ATHLETE: Rick
+  TITLE: Running
   MIN_GRID_DISTANCE: 10 # change min distance here
   TITLE_GRID: Over 10km Runs # also here
 
