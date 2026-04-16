@@ -1,0 +1,39 @@
+name: Export GPX
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export-gpx:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore cached data
+        uses: actions/cache@v4
+        with:
+          path: |
+            run_page/data.db
+            src/static/activities.json
+          key: gpx-export-${{ github.ref }}
+          restore-keys: |
+            gpx-export-
+
+      - name: Run GPX export
+        run: python export_gpx.py
+
+      - name: Upload GPX files
+        uses: actions/upload-artifact@v4
+        with:
+          name: joyrun-gpx
+          path: gpx_exports/
