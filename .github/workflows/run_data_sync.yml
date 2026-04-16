@@ -91,12 +91,16 @@ jobs:
             ${{ env.DATA_CACHE_PREFIX }}-${{ github.sha }}-
             ${{ env.DATA_CACHE_PREFIX }}-
 
-      - name: Sync JoyRun (Fallback to SMS Code)
-        # This step ONLY runs if the first one failed
+      - name: Clear old local data
+        run: |
+          rm -rf activities assets GPX_OUT TCX_OUT FIT_OUT Workouts
+          rm -f run_page/data.db src/static/activities.json imported.json
+
+      - name: Sync JoyRun 
         if: env.RUN_TYPE == 'joyrun'
         run: |
-          echo "Session expired. Falling back to SMS login..."
-          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_PHONE }} ${{ secrets.JOYRUN_CODE }} --with-gpx     
+        
+          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_PHONE }} ${{ secrets.JOYRUN_CODE }} --with-gpx
 
       - name: Run sync Nike script
         if: env.RUN_TYPE == 'nike'
