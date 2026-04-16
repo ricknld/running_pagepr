@@ -90,13 +90,15 @@ jobs:
           restore-keys: |
             ${{ env.DATA_CACHE_PREFIX }}-${{ github.sha }}-
             ${{ env.DATA_CACHE_PREFIX }}-
-
-      - name: Ensure GPX_OUT exists
-        if: env.RUN_TYPE == 'joyrun'
+            
+      - name: Prepare folders
         run: |
+          mkdir -p assets
+          mkdir -p activities
           mkdir -p GPX_OUT
-          ls -la
-          ls -la GPX_OUT
+          mkdir -p TCX_OUT
+          mkdir -p FIT_OUT
+          mkdir -p Workouts
 
       - name: Sync JoyRun 
         if: env.RUN_TYPE == 'joyrun'
