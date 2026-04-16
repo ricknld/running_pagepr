@@ -26,7 +26,7 @@ on:
 
 env:
   # please change to your own config.
-  RUN_TYPE: joyrun
+  RUN_TYPE: gpxtostrava
   ATHLETE: Rick
   TITLE: Running
   MIN_GRID_DISTANCE: 10 # change min distance here
@@ -91,11 +91,6 @@ jobs:
             ${{ env.DATA_CACHE_PREFIX }}-${{ github.sha }}-
             ${{ env.DATA_CACHE_PREFIX }}-
 
-      - name: Clear old local data
-        run: |
-          rm -rf activities assets GPX_OUT TCX_OUT FIT_OUT Workouts
-          rm -f run_page/data.db src/static/activities.json imported.json
-
       - name: Ensure GPX_OUT exists
         if: env.RUN_TYPE == 'joyrun'
         run: |
@@ -139,6 +134,12 @@ jobs:
 
       - name: Run sync Strava script
         if: env.RUN_TYPE == 'strava'
+        run: |
+          python run_page/gpx_to_strava_sync.py ${{ secrets.STRAVA_CLIENT_ID }} ${{ secrets.STRAVA_CLIENT_SECRET }} ${{ secrets.STRAVA_CLIENT_REFRESH_TOKEN }}
+        # If you only want to sync 'type running' add args --only-run, default script is to sync all data (rides and runs).
+
+      - name: Run GPX to Strava script
+        if: env.RUN_TYPE == 'gpxtostrava'
         run: |
           python run_page/strava_sync.py ${{ secrets.STRAVA_CLIENT_ID }} ${{ secrets.STRAVA_CLIENT_SECRET }} ${{ secrets.STRAVA_CLIENT_REFRESH_TOKEN }}
         # If you only want to sync 'type running' add args --only-run, default script is to sync all data (rides and runs).
