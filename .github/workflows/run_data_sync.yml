@@ -111,20 +111,12 @@ jobs:
             ${{ env.DATA_CACHE_PREFIX }}-${{ github.sha }}-
             ${{ env.DATA_CACHE_PREFIX }}-
 
-      - name: Sync JoyRun (Using Saved Session)
-        id: joyrun_session
-        if: env.RUN_TYPE == 'joyrun'
-        # This allows the workflow to keep going even if the session is expired
-        continue-on-error: true 
-        run: |
-          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_UID }} ${{ secrets.JOYRUN_SID }} --from-uid-sid
-
       - name: Sync JoyRun (Fallback to SMS Code)
         # This step ONLY runs if the first one failed
         if: env.RUN_TYPE == 'joyrun' && steps.joyrun_session.outcome == 'failure'
         run: |
           echo "Session expired. Falling back to SMS login..."
-          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_PHONE }} ${{ secrets.JOYRUN_CODE }}          
+          python run_page/joyrun_sync.py ${{ secrets.JOYRUN_PHONE }} ${{ secrets.JOYRUN_CODE }} --with-gpx      
 
       - name: Run sync Nike script
         if: env.RUN_TYPE == 'nike'
