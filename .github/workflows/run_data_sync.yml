@@ -226,7 +226,13 @@ jobs:
         if: env.RUN_TYPE == 'db_updater'
         run: |
           python run_page/db_updater.py
-
+          
+      - name: Ensure output folders exist
+        run: |
+          mkdir -p assets
+          mkdir -p activities
+          mkdir -p GPX_OUT
+          
       - name: Make svg GitHub profile
         if: env.RUN_TYPE != 'pass'
         env:
