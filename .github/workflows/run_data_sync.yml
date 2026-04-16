@@ -96,6 +96,13 @@ jobs:
           rm -rf activities assets GPX_OUT TCX_OUT FIT_OUT Workouts
           rm -f run_page/data.db src/static/activities.json imported.json
 
+      - name: Ensure GPX_OUT exists
+        if: env.RUN_TYPE == 'joyrun'
+        run: |
+          mkdir -p GPX_OUT
+          ls -la
+          ls -la GPX_OUT
+
       - name: Sync JoyRun 
         if: env.RUN_TYPE == 'joyrun'
         run: |
