@@ -23,7 +23,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            run_page/data.db
+            running_pagepr/data.db
             src/static/activities.json
           key: gpx-export-${{ github.ref }}
           restore-keys: |
