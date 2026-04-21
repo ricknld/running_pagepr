@@ -1,0 +1,5 @@
+  name: Clear old local data
+  run: |
+    rm -rf activities assets
+    rm -f run_page/data.db src/static/activities.json imported.json
+    mkdir -p activities assets GPX_OUT TCX_OUT FIT_OUT Workouts
